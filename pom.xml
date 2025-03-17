@@ -835,7 +835,7 @@
         <profile>
             <id>docker-compose</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>
