@@ -1,0 +1,32 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "aiAssistant",
+    "buildTool": "maven",
+    "cacheProvider": "no",
+    "clientFramework": "vue",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1742234097962,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "enableHibernateCache": null,
+    "enableTranslation": false,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.8.0",
+    "jwtSecretKey": "MTdiYzgwMzRjYmI1NDAxM2E1MmFkMWZkNDk5YjVkMDk4MTg1MDQyNTMxODViZDljMWVlMGRhYWI0ZmE5M2FmZmExNWFhZGI5ZWE5YzIwYmU1ZTU0ZGE3OTgwNGIxODQ2MjFlNWNhODY0ZjRlZTY4NWFiNDA5Nzg1MDQ0MzE2ZTM=",
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "zh-cn",
+    "packageName": "com.mycompany.myapp",
+    "prodDatabaseType": "mysql",
+    "reactive": false,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}
