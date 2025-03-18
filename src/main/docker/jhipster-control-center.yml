@@ -2,7 +2,7 @@
 # To allow JHCC to reach JHipster application from a docker container note that we set the host as host.docker.internal
 # To reach the application from a browser, you need to add '127.0.0.1 host.docker.internal' to your hosts file.
 ### Discovery mode
-# JHCC support 3 kinds of discovery mode: Consul, Eureka and static
+# JHCC supports 3 kinds of discovery mode: Consul, Eureka and static
 # In order to use one, please set SPRING_PROFILES_ACTIVE to one (and only one) of this values: consul,eureka,static
 ### Discovery properties
 # According to the discovery mode choose as Spring profile, you have to set the right properties
@@ -24,7 +24,7 @@
 #### IMPORTANT
 # If you choose Consul or Eureka mode:
 # Do not forget to remove the prefix "127.0.0.1" in front of their port in order to expose them.
-# This is required because JHCC need to communicate with Consul or Eureka.
+# This is required because JHCC needs to communicate with Consul or Eureka.
 # - In Consul mode, the ports are in the consul.yml file.
 # - In Eureka mode, the ports are in the jhipster-registry.yml file.
 
@@ -42,7 +42,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod,api-docs,static
       - SPRING_SECURITY_USER_PASSWORD=admin
       # The token should have the same value than the one declared in you Spring configuration under the jhipster.security.authentication.jwt.base64-secret configuration's entry
-      - JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET=MTdiYzgwMzRjYmI1NDAxM2E1MmFkMWZkNDk5YjVkMDk4MTg1MDQyNTMxODViZDljMWVlMGRhYWI0ZmE5M2FmZmExNWFhZGI5ZWE5YzIwYmU1ZTU0ZGE3OTgwNGIxODQ2MjFlNWNhODY0ZjRlZTY4NWFiNDA5Nzg1MDQ0MzE2ZTM=
+      - JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET=YTg5YjQ1MDU5MTFlZTdlNWE5NmFlMDg2NDAwNWI3OTM0NjFjMGFhOGE3NDRjYjUzZmY4MDMxZGFmM2IxOTExYzcyNWY5MjdhYTI5MzU1MzY2ZDM1ZTIxMWFmYzQwYTRhN2YyZmQzZGUwY2YyYzYwOTBmZDkzZjQ1NTlkYzQ0MjU=
       - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_AIASSISTANT_0_URI=http://host.docker.internal:8080
       - LOGGING_FILE_NAME=/tmp/jhipster-control-center.log
     # If you want to expose these ports outside your dev PC,

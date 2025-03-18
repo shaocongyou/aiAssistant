@@ -39,7 +39,7 @@ export default defineComponent({
       },
     };
   },
-  setup(prop) {
+  setup() {
     const loginService = inject<LoginService>('loginService');
     const registerService = inject('registerService', () => new RegisterService(), true);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'zh-cn'), true);
