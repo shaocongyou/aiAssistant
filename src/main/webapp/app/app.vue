@@ -5,7 +5,7 @@
       <jhi-navbar></jhi-navbar>
     </div>
     <div class="container-fluid">
-      <div class="card jh-card bg-primary">
+      <div class="card jh-card">
         <!--这个是看网址，根据网址进行显示-->
         <router-view></router-view>
       </div>
