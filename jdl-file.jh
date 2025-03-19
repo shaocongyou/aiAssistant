@@ -1,0 +1,123 @@
+// 定义枚举
+enum GoalType {
+  SHORT_TERM,  // 短期目标
+  LONG_TERM    // 长期目标
+}
+
+enum TaskStatus {
+  PENDING,      // 待办
+  IN_PROGRESS,  // 进行中
+  COMPLETED,    // 已完成
+  CANCELLED     // 已取消
+}
+
+enum HabitType {
+  HEALTH,   // 健康
+  LEARNING, // 学习
+  WORK,     // 工作
+  SOCIAL,   // 社交
+  FINANCE,  // 财务
+  OTHER     // 其他
+}
+
+// 定义实体
+entity Goal {
+  title String required maxlength(100)        // 目标标题（必填，最大100字符）
+  description String maxlength(500)           // 目标描述（最大500字符）
+  goalType GoalType required                  // 目标类型（必填，短期 / 长期）
+  deadline LocalDate                          // 截止日期（可选）
+  completed Boolean required                  // 是否完成（必填，默认为false）
+  createdAt Instant required                  // 创建时间（必填）
+  updatedAt Instant required                  // 最后更新时间（必填）
+}
+
+entity Task {
+  title String required maxlength(100)        // 任务标题（必填，最大100字符）
+  description String maxlength(500)           // 任务描述（最大500字符）
+  status TaskStatus required                  // 任务状态（必填：待办 / 进行中 / 已完成 / 已取消）
+  dueDate LocalDate                           // 截止日期（可选）
+  priority Integer required                   // 优先级（必填，1-5）
+  createdAt Instant required                  // 创建时间（必填）
+  updatedAt Instant required                  // 最后更新时间（必填）
+}
+
+entity Habit {
+  name String required maxlength(100)         // 习惯名称（必填，最大100字符）
+  habitType HabitType required                // 习惯类型（必填）
+  frequency String required                   // 习惯频率（必填，如“每天”、“每周三次”）
+  startDate LocalDate                         // 开始时间（可选）
+  active Boolean required                     // 是否激活（必填，默认为true）
+}
+
+entity JournalEntry {
+  title String required maxlength(100)        // 日记标题（必填，最大100字符）
+  content Blob required                       // 日记内容（必填）
+  mood String maxlength(50)                   // 心情描述（最大50字符）
+  createdAt Instant required                  // 创建时间（必填）
+}
+
+entity FinanceRecord {
+  description String required maxlength(200)  // 记录描述（必填，最大200字符）
+  amount BigDecimal required                  // 金额（必填）
+  category String required maxlength(50)      // 记录类别（必填：如收入 / 支出）
+  date LocalDate required                     // 记录日期（必填）
+  createdAt Instant required                  // 记录创建时间（必填）
+}
+
+entity Reminder {
+  message String required maxlength(200)      // 提醒内容（必填，最大200字符）
+  reminderTime Instant required               // 提醒时间（必填）
+  repeatInterval String                       // 重复间隔（如“每天”）（可选）
+  createdAt Instant required                  // 创建时间（必填）
+}
+
+entity MoodTracker {
+  mood String required maxlength(50)          // 情绪描述（如“开心”、“焦虑”）
+  intensity Integer required                   // 情绪强度（1-5）
+  date LocalDate required                      // 记录日期
+  createdAt Instant required                   // 创建时间
+}
+
+entity ReadingList {
+  title String required maxlength(100)         // 书籍或文章标题
+  status String required                       // 状态（如“未开始”、“进行中”、“已完成”）
+  startDate LocalDate                          // 开始时间
+  endDate LocalDate                            // 结束时间
+  createdAt Instant required                   // 创建时间
+}
+
+entity FocusSession {
+  duration Integer required                    // 专注时长（分钟）
+  task String maxlength(200)                   // 关联的任务或目标
+  date LocalDate required                      // 记录日期
+  createdAt Instant required                   // 创建时间
+}
+
+entity SocialConnection {
+  friendUsername String required               // 好友用户名（必填）
+  status String required                       // 关系状态（必填：pending, accepted, blocked）
+  createdAt Instant required                   // 关系建立时间（必填）
+}
+
+relationship OneToMany {
+  Goal to Task with builtInEntity              // 目标-任务（一对多）
+  Task to Reminder with builtInEntity          // 任务-提醒（一对多）
+}
+
+relationship ManyToOne {
+  Goal{user} to User with builtInEntity        // 目标-用户（多对一）
+  Task{user} to User with builtInEntity        // 任务-用户（多对一）
+  Habit{user} to User with builtInEntity       // 习惯-用户（多对一）
+  JournalEntry{user} to User with builtInEntity // 日记-用户（多对一）
+  FinanceRecord{user} to User with builtInEntity  // 财务记录-用户（多对一）
+  Reminder{user} to User with builtInEntity     // 提醒-用户（多对一）
+  MoodTracker{user} to User with builtInEntity  // 情绪记录-用户（多对一）
+  ReadingList{user} to User with builtInEntity  // 阅读计划-用户（多对一）
+  FocusSession{user} to User with builtInEntity // 专注记录-用户（多对一）
+}
+
+relationship ManyToMany {
+  SocialConnection{user} to User with builtInEntity // 社交关系-用户（多对多）
+}
+
+paginate Goal, Task, Habit, JournalEntry, FinanceRecord, Reminder, MoodTracker, ReadingList, FocusSession, SocialConnection with pagination

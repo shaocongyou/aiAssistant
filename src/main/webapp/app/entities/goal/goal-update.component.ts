@@ -1,0 +1,129 @@
+import { type Ref, computed, defineComponent, inject, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
+
+import GoalService from './goal.service';
+import { useDateFormat, useValidation } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
+
+import UserService from '@/entities/user/user.service';
+import { Goal, type IGoal } from '@/shared/model/goal.model';
+import { GoalType } from '@/shared/model/enumerations/goal-type.model';
+
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'GoalUpdate',
+  setup() {
+    const goalService = inject('goalService', () => new GoalService());
+    const alertService = inject('alertService', () => useAlertService(), true);
+
+    const goal: Ref<IGoal> = ref(new Goal());
+    const userService = inject('userService', () => new UserService());
+    const users: Ref<Array<any>> = ref([]);
+    const goalTypeValues: Ref<string[]> = ref(Object.keys(GoalType));
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'zh-cn'), true);
+
+    const route = useRoute();
+    const router = useRouter();
+
+    const previousState = () => router.go(-1);
+
+    const retrieveGoal = async goalId => {
+      try {
+        const res = await goalService().find(goalId);
+        res.createdAt = new Date(res.createdAt);
+        res.updatedAt = new Date(res.updatedAt);
+        goal.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
+
+    if (route.params?.goalId) {
+      retrieveGoal(route.params.goalId);
+    }
+
+    const initRelationships = () => {
+      userService()
+        .retrieve()
+        .then(res => {
+          users.value = res.data;
+        });
+    };
+
+    initRelationships();
+
+    const validations = useValidation();
+    const validationRules = {
+      title: {
+        required: validations.required('本字段不能为空.'),
+        maxLength: validations.maxLength('本字段最大长度为 100 个字符.', 100),
+      },
+      description: {
+        maxLength: validations.maxLength('本字段最大长度为 500 个字符.', 500),
+      },
+      goalType: {
+        required: validations.required('本字段不能为空.'),
+      },
+      deadline: {},
+      completed: {
+        required: validations.required('本字段不能为空.'),
+      },
+      createdAt: {
+        required: validations.required('本字段不能为空.'),
+      },
+      updatedAt: {
+        required: validations.required('本字段不能为空.'),
+      },
+      tasks: {},
+      user: {},
+    };
+    const v$ = useVuelidate(validationRules, goal as any);
+    v$.value.$validate();
+
+    return {
+      goalService,
+      alertService,
+      goal,
+      previousState,
+      goalTypeValues,
+      isSaving,
+      currentLanguage,
+      users,
+      v$,
+      ...useDateFormat({ entityRef: goal }),
+    };
+  },
+  created(): void {},
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      if (this.goal.id) {
+        this.goalService()
+          .update(this.goal)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showInfo(`A Goal is updated with identifier ${param.id}`);
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      } else {
+        this.goalService()
+          .create(this.goal)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showSuccess(`A Goal is created with identifier ${param.id}`);
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      }
+    },
+  },
+});
